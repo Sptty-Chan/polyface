@@ -19,35 +19,39 @@ y = [(y[i] - min_y) / (max_y - min_y) for i in range(len(x))]
 titikData = len(x)
 m1 = 0
 m2 = 0
+m3 = 0
 b = 0
 learningRate = 0.01
 iterasi = 500000
 
 def train(iterasi=iterasi, learningRate=learningRate):
-    global m1, m2, b
+    global m1, m2, m3, b
     for it in range(iterasi):
         gradientM1 = 0
         gradientM2 = 0
+        gradientM3 = 0
         gradientB = 0
         total_error = 0
         for i in range(titikData):
-            y_prediksi = b + m1 * x[i] + m2 * x[i]**2
+            y_prediksi = b + m1 * x[i] + m2 * x[i]**2 + m3 * x[i]**3
             error = y[i] - y_prediksi
             total_error += error**2
             gradientM1 += (-2 * x[i] * error)
             gradientM2 += (-2 * x[i]**2 * error)
+            gradientM3 += (-2 * x[i]**3 * error)
             gradientB += (-2 * error)
         m1 -= (learningRate * gradientM1) / titikData
         m2 -= (learningRate * gradientM2) / titikData
+        m3 -= (learningRate * gradientM3) / titikData
         b -= (learningRate * gradientB) / titikData
         mse = total_error / titikData
         if it % 1000 == 0:
             print(f"\rMSE (error): {mse}                                             ")
         print("\rProses training sedang dilakukan, lama proses tergantung pada jumlah iterasi", end="")
-    print(f"\rParameter m1, m2, dan b setelah training: ({m1}, {m2}, {b})")
+    print(f"\rParameter m1, m2, m3, dan b setelah training: ({m1}, {m2}, {m3}, {b})")
 
 def prediksi(x_test):
-    hasilPrediksi = b + m1 * x_test + m2 * x_test**2
+    hasilPrediksi = b + m1 * x_test + m2 * x_test**2 + m3 * x_test**3
     return minMaxScalingReverserY(hasilPrediksi)
 
 def minMaxScalingX(x_test):
@@ -63,15 +67,15 @@ if __name__ == "__main__":
         print("Pilih enter untuk melakukan training ulang (jika ingin mengubah learning rate, iterasi, atau data latih)")
         par = input("Gunakan parameter yang sudah ditrain sebelumnya (y/enter): ").lower()
         if par == "y":
-            m1, m2, b = listParameter
+            m1, m2, m3, b = listParameter
         else:
             iterasi = int(input("Masukkan jumlah iterasi (rekomendasi antara 50000 sampai 500000): "))
             lr = float(input("Masukkan learning rate (rekomendasi antara 0.01 sampai 0.0001): "))
             train(iterasi=iterasi, learningRate=lr)
-            open("parameter.txt", "w").write(f"[{m1}, {m2}, {b}]")
+            open("parameter.txt", "w").write(f"[{m1}, {m2}, {m3}, {b}]")
     except:
         train()
-        open("parameter.txt", "w").write(f"[{m1}, {m2}, {b}]")
+        open("parameter.txt", "w").write(f"[{m1}, {m2}, {m3}, {b}]")
     testX1 = x[0]
     testX2 = x[1]
     testX3 = x[2]
