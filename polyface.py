@@ -34,12 +34,12 @@ def train(iterasi=iterasi, learningRate=learningRate):
         total_error = 0
         for i in range(titikData):
             y_prediksi = b + m1 * x[i] + m2 * x[i]**2 + m3 * x[i]**3
-            error = y[i] - y_prediksi
+            error = y_prediksi - y[i]
             total_error += error**2
-            gradientM1 += (-2 * x[i] * error)
-            gradientM2 += (-2 * x[i]**2 * error)
-            gradientM3 += (-2 * x[i]**3 * error)
-            gradientB += (-2 * error)
+            gradientM1 += (2 * x[i] * error)
+            gradientM2 += (2 * x[i]**2 * error)
+            gradientM3 += (2 * x[i]**3 * error)
+            gradientB += (2 * error)
         m1 -= (learningRate * gradientM1) / titikData
         m2 -= (learningRate * gradientM2) / titikData
         m3 -= (learningRate * gradientM3) / titikData
